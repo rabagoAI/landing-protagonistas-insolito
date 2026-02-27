@@ -614,12 +614,14 @@
   <p>© PROTAGONISTAS DE LO INSÓLITO · <a href="https://protagonistasdeloinsolito.com" target="_blank">protagonistasdeloinsolito.com</a></p>
 </footer>
 
-<!-- RSS: feed de iVoox vía AllOrigins (mismo método que funciona en Misterios en Viernes) -->
+<!-- RSS: proxy propio en Vercel (api/proxy.js) — sin dependencias externas -->
 <script>
 (function() {
-  const RSS_URL   = 'https://feeds.ivoox.com/feed_fg_f11691380_filtro_1.xml';
-  const PROXY_URL = `https://api.allorigins.win/get?url=${encodeURIComponent(RSS_URL)}`;
-  const IMG_PROXY = url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+  const RSS_URL    = 'https://feeds.ivoox.com/feed_fg_f11691380_filtro_1.xml';
+  // En Vercel usamos nuestro propio proxy. En local cae a AllOrigins.
+  const OWN_PROXY  = url => `/api/proxy?url=${encodeURIComponent(url)}`;
+  const FALLBACK   = url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+  const IMG_PROXY  = url => `/api/proxy?url=${encodeURIComponent(url)}`;
   const PAGE_SIZE = 8;
 
   let allEpisodes = [];
@@ -740,19 +742,40 @@
   }
 
   async function loadFeed() {
+    let xmlStr = null;
+
+    // 1. Intentar con el proxy propio de Vercel (/api/proxy)
     try {
-      const res  = await fetch(PROXY_URL);
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const data = await res.json();
-      if (!data.contents) throw new Error('Respuesta vacía');
+      const res = await fetch(OWN_PROXY(RSS_URL));
+      if (res.ok) {
+        const ct = res.headers.get('content-type') || '';
+        const text = await res.text();
+        if (text.trim().startsWith('<')) xmlStr = text;
+      }
+    } catch(e) { /* proxy local no disponible (desarrollo), usar fallback */ }
 
-      allEpisodes = parseRSS(data.contents);
+    // 2. Fallback a AllOrigins si el proxy propio no está disponible
+    if (!xmlStr) {
+      try {
+        const res  = await fetch(FALLBACK(RSS_URL));
+        const data = await res.json();
+        if (data.contents?.trim().startsWith('<')) xmlStr = data.contents;
+      } catch(e) { /* también falló */ }
+    }
+
+    if (!xmlStr) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('error-msg').style.display = 'block';
+      return;
+    }
+
+    try {
+      allEpisodes = parseRSS(xmlStr);
       if (allEpisodes.length === 0) throw new Error('Sin episodios');
-
       document.getElementById('loading').style.display = 'none';
       renderEpisodes();
     } catch(e) {
-      console.error('Error feed:', e);
+      console.error('Error parseando feed:', e);
       document.getElementById('loading').style.display = 'none';
       document.getElementById('error-msg').style.display = 'block';
     }
