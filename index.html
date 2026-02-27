@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Protagonistas de lo Insólito</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Oswald:wght@300;400;600;700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #060608;
+      --bg2:      #0a0c0a;
+      --card:     #0d0f0d;
+      --green:    #39ff14;
+      --green-dim:#1a7a08;
+      --green-glow: rgba(57,255,20,0.15);
+      --amber:    #ffb800;
+      --red:      #cc2200;
+      --text:     #c8d4c0;
+      --muted:    #5a6655;
+      --border:   rgba(57,255,20,0.12);
+      --scanline: rgba(0,0,0,0.35);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Source Serif 4', Georgia, serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      cursor: crosshair;
+    }
+
+    /* ── SCANLINES ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.08) 2px,
+        rgba(0,0,0,0.08) 4px
+      );
+    }
+
+    /* ── NOISE ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ── HERO ── */
+    header {
+      position: relative;
+      z-index: 1;
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem 1.5rem 5rem;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(6,6,8,0.45) 0%, rgba(6,6,8,0.80) 65%, #060608 100%),
+        url('https://protagonistasdeloinsolito.com/wp-content/uploads/2024/06/PDLI.jpg') center 30%/cover no-repeat;
+      z-index: 0;
+      filter: saturate(0.7) contrast(1.1);
+    }
+
+    /* animated vignette flicker */
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%);
+      animation: flicker 8s ease-in-out infinite;
+    }
+
+    @keyframes flicker {
+      0%,100% { opacity: 1; }
+      92%      { opacity: 1; }
+      93%      { opacity: 0.6; }
+      94%      { opacity: 1; }
+      96%      { opacity: 0.8; }
+      97%      { opacity: 1; }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 780px;
+    }
+
+    .tag-classified {
+      display: inline-block;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      color: var(--green);
+      border: 1px solid var(--green-dim);
+      padding: 0.3rem 0.9rem;
+      margin-bottom: 2rem;
+      animation: blink-border 3s step-end infinite;
+    }
+
+    @keyframes blink-border {
+      0%,100% { border-color: var(--green-dim); }
+      50%     { border-color: var(--green); box-shadow: 0 0 8px var(--green-glow); }
+    }
+
+    h1 {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 700;
+      font-size: clamp(2.4rem, 7vw, 5rem);
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+      text-transform: uppercase;
+      color: #fff;
+      text-shadow: 0 0 30px rgba(57,255,20,0.2);
+      animation: fadeUp 0.8s ease both;
+    }
+
+    h1 .highlight {
+      color: var(--green);
+      display: block;
+      font-size: 1.15em;
+      text-shadow:
+        0 0 20px rgba(57,255,20,0.6),
+        0 0 60px rgba(57,255,20,0.2);
+      animation: glitch 6s infinite;
+    }
+
+    @keyframes glitch {
+      0%,89%,100% { text-shadow: 0 0 20px rgba(57,255,20,0.6), 0 0 60px rgba(57,255,20,0.2); transform: none; }
+      90%  { transform: translate(-2px, 0); text-shadow: 2px 0 #ff003c, -2px 0 #00f0ff; }
+      91%  { transform: translate(2px, 0);  text-shadow: -2px 0 #ff003c, 2px 0 #00f0ff; }
+      92%  { transform: none; }
+    }
+
+    .hero-desc {
+      font-size: 1rem;
+      font-weight: 300;
+      font-style: italic;
+      color: #8a9e82;
+      max-width: 520px;
+      margin: 1.5rem auto 0;
+      line-height: 1.7;
+      animation: fadeUp 0.8s ease 0.2s both;
+    }
+
+    .hosts {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.25em;
+      color: var(--green);
+      margin-top: 1.4rem;
+      text-transform: uppercase;
+      text-shadow: 0 0 12px rgba(57,255,20,0.4);
+      animation: fadeUp 0.8s ease 0.3s both;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      color: var(--muted);
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    .scroll-hint::before {
+      content: '';
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, transparent, var(--green-dim));
+    }
+
+    @keyframes bounce {
+      0%,100% { transform: translateX(-50%) translateY(0); }
+      50%     { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0 1.5rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--green-dim), transparent);
+    }
+
+    .divider span {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      color: var(--green-dim);
+      white-space: nowrap;
+    }
+
+    /* ── PLATFORMS ── */
+    .platforms-section {
+      position: relative;
+      z-index: 1;
+      padding: 3rem 1.5rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--green-dim);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .platforms-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+    }
+
+    .platform-link {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.55rem 1.1rem;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      background: rgba(57,255,20,0.03);
+      color: var(--text);
+      text-decoration: none;
+      font-family: 'Oswald', sans-serif;
+      font-weight: 300;
+      font-size: 0.82rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: all 0.2s ease;
+    }
+
+    .platform-link:hover {
+      border-color: var(--green);
+      background: rgba(57,255,20,0.07);
+      color: var(--green);
+      box-shadow: 0 0 12px rgba(57,255,20,0.1), inset 0 0 12px rgba(57,255,20,0.04);
+    }
+
+    .platform-link svg {
+      width: 16px; height: 16px; flex-shrink: 0;
+    }
+
+    /* ── EPISODES ── */
+    .episodes-section {
+      position: relative;
+      z-index: 1;
+      padding: 1rem 1.5rem 6rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    #episodes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .episode-card {
+      border-bottom: 1px solid var(--border);
+      padding: 1.4rem 0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      animation: fadeUp 0.5s ease both;
+      position: relative;
+    }
+
+    .episode-card:first-child { border-top: 1px solid var(--border); }
+
+    .episode-card::before {
+      content: '';
+      position: absolute;
+      left: -1.5rem;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: var(--green);
+      opacity: 0;
+      transition: opacity 0.2s;
+      box-shadow: 0 0 8px var(--green);
+    }
+
+    .episode-card:hover {
+      padding-left: 1rem;
+      background: rgba(57,255,20,0.02);
+    }
+
+    .episode-card:hover::before { opacity: 1; }
+
+    .ep-inner { display: flex; gap: 1.2rem; align-items: flex-start; }
+
+    .ep-thumb-wrap {
+      width: 90px; height: 90px;
+      flex-shrink: 0;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      position: relative;
+    }
+
+    .ep-thumb {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(0.6) contrast(1.1);
+      transition: filter 0.3s;
+    }
+
+    .episode-card:hover .ep-thumb { filter: saturate(1) contrast(1.1); }
+
+    .ep-thumb-fallback {
+      width: 100%; height: 100%;
+      background: #0d120d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--green-dim);
+    }
+
+    .ep-body { flex: 1; min-width: 0; }
+
+    .ep-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .ep-number {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--green);
+      letter-spacing: 0.1em;
+    }
+
+    .ep-season {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--green-dim);
+      border: 1px solid var(--green-dim);
+      padding: 0.1rem 0.5rem;
+      letter-spacing: 0.1em;
+    }
+
+    .ep-date {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .ep-dur {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--amber);
+      opacity: 0.7;
+    }
+
+    .ep-title {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 400;
+      font-size: 1rem;
+      color: #dde8d5;
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .ep-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.65;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .ep-actions { margin-top: 0.8rem; }
+
+    .btn-listen {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.9rem;
+      border: 1px solid var(--green-dim);
+      background: transparent;
+      color: var(--green-dim);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: all 0.2s;
+    }
+
+    .btn-listen:hover {
+      border-color: var(--green);
+      color: var(--green);
+      background: rgba(57,255,20,0.05);
+      box-shadow: 0 0 10px rgba(57,255,20,0.15);
+    }
+
+    /* ── LOADING / ERROR ── */
+    #loading, #error-msg {
+      text-align: center;
+      padding: 4rem 0;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--green-dim);
+    }
+
+    .spinner {
+      width: 28px; height: 28px;
+      border: 1px solid var(--green-dim);
+      border-top-color: var(--green);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .load-more-wrap {
+      text-align: center;
+      margin-top: 2.5rem;
+    }
+
+    #load-more {
+      padding: 0.6rem 2rem;
+      border: 1px solid var(--green-dim);
+      background: transparent;
+      color: var(--green-dim);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    #load-more:hover {
+      border-color: var(--green);
+      color: var(--green);
+      box-shadow: 0 0 16px rgba(57,255,20,0.15);
+    }
+
+    #load-more:disabled { opacity: 0.3; cursor: default; }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+
+    footer p {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+    }
+
+    footer a { color: var(--green-dim); text-decoration: none; }
+    footer a:hover { color: var(--green); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 580px) {
+      h1 { font-size: 2.2rem; }
+      .ep-thumb-wrap { width: 64px; height: 64px; }
+      .ep-title { font-size: 0.9rem; }
+      .episode-card:hover { padding-left: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<header>
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="tag-classified">▶ EMITIENDO EN VIVO · FRECUENCIA ANÓMALA</div>
+    <h1>
+      Protagonistas<br>de lo
+      <span class="highlight">Insólito</span>
+    </h1>
+    <p class="hero-desc">Damos voz a quienes han vivido lo inexplicable. OVNIs, fenómenos del más allá, anomalías espacio-temporales y encuentros con lo desconocido.</p>
+    <p class="hosts">Con Miguel Pedrero &amp; Carlos Gabriel Fernández</p>
+  </div>
+  <div class="scroll-hint">ACCEDER</div>
+</header>
+
+<!-- PLATAFORMAS -->
+<section class="platforms-section">
+  <p class="section-label">// Sintonízanos en</p>
+  <div class="platforms-grid">
+
+    <a class="platform-link" href="https://protagonistasdeloinsolito.com" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16"/></svg>
+      Web oficial
+    </a>
+
+    <a class="platform-link" href="https://www.ivoox.com/podcast-protagonistas-lo-insolito_sq_f11691380_1.html" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18a8 8 0 110-16 8 8 0 010 16zm-1-5h2V9h-2v6zm1-8a1.25 1.25 0 110 2.5A1.25 1.25 0 0112 7z"/></svg>
+      iVoox
+    </a>
+
+    <a class="platform-link" href="https://podcasts.apple.com/cl/podcast/protagonistas-de-lo-ins%C3%B3lito/id1693233184" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-.5 4.5a3.5 3.5 0 013.5 3.5c0 1.02-.44 1.94-1.14 2.59.45.31.8.74 1.01 1.25.16.38.25.8.26 1.24A4.49 4.49 0 0112 17.5a4.49 4.49 0 01-3.13-1.42c.01-.44.1-.86.26-1.24.21-.51.56-.94 1.01-1.25A3.49 3.49 0 018.5 10a3.5 3.5 0 013-3.46V6.5zm0 1a2.5 2.5 0 100 5 2.5 2.5 0 000-5zm.5 6a3.5 3.5 0 00-3.46 3h6.92A3.5 3.5 0 0012 13.5z"/></svg>
+      Apple Podcasts
+    </a>
+
+    <a class="platform-link" href="https://music.amazon.com/es-ar/podcasts/047f6d1a-ea2c-4780-8ff7-477524c61474/protagonistas-de-lo-ins%C3%B3lito" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.5 14.5c-2 1.2-4.5 1.5-7 .8-.3-.1-.2-.5.1-.5 2.2.5 4.4.3 6.2-.7.3-.2.6.1.7.4zm.9-1.9c-.2.3-.6.4-.9.2-2.3-1.4-5.8-1.8-8.5-1-.3.1-.7-.1-.8-.4-.1-.3.1-.7.4-.8 3.1-.9 6.9-.5 9.6 1.1.2.2.3.6.2.9zm.1-2c-2.7-1.6-7.2-1.75-9.8-1-.4.1-.8-.1-.9-.5-.1-.4.1-.8.5-.9 3-.9 8-.7 11.1 1.1.3.2.4.7.2 1-.2.3-.7.5-1.1.3z"/></svg>
+      Amazon Music
+    </a>
+
+    <a class="platform-link" href="https://www.facebook.com/p/Protagonistas-de-lo-Ins%C3%B3lito-100086004492870/?locale=es_LA" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      Facebook
+    </a>
+
+    <a class="platform-link" href="https://podnews.net/podcast/iqshm" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11a8 8 0 0 1 16 0"/><path d="M4 11v1a8 8 0 0 0 16 0v-1"/><line x1="12" y1="11" x2="12" y2="19"/><circle cx="12" cy="20" r="1" fill="currentColor" stroke="none"/></svg>
+      Pod News
+    </a>
+
+  </div>
+</section>
+
+<div class="divider"><span>// ÚLTIMAS TRANSMISIONES</span></div>
+
+<!-- EPISODIOS -->
+<section class="episodes-section">
+
+  <div id="loading">
+    <div class="spinner"></div>
+    CARGANDO TRANSMISIONES...
+  </div>
+
+  <div id="error-msg" style="display:none">
+    ERROR DE SEÑAL · <a href="https://protagonistasdeloinsolito.com" target="_blank" style="color:var(--green)">IR A LA WEB OFICIAL →</a>
+  </div>
+
+  <div id="episodes-list"></div>
+
+  <div class="load-more-wrap">
+    <button id="load-more" style="display:none">[ CARGAR MÁS EPISODIOS ]</button>
+  </div>
+</section>
+
+<footer>
+  <p>© PROTAGONISTAS DE LO INSÓLITO · <a href="https://protagonistasdeloinsolito.com" target="_blank">protagonistasdeloinsolito.com</a></p>
+</footer>
+
+<!-- RSS: feed de iVoox vía AllOrigins (mismo método que funciona en Misterios en Viernes) -->
+<script>
+(function() {
+  const RSS_URL   = 'https://feeds.ivoox.com/feed_fg_f11691380_filtro_1.xml';
+  const PROXY_URL = `https://api.allorigins.win/get?url=${encodeURIComponent(RSS_URL)}`;
+  const IMG_PROXY = url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+  const PAGE_SIZE = 8;
+
+  let allEpisodes = [];
+  let shown = 0;
+
+  function formatDate(str) {
+    if (!str) return '';
+    return new Date(str).toLocaleDateString('es-ES', { year:'numeric', month:'long', day:'numeric' });
+  }
+
+  function stripHTML(html) {
+    const d = document.createElement('div');
+    d.innerHTML = html;
+    return (d.textContent || d.innerText || '').trim();
+  }
+
+  function parseRSS(xmlStr) {
+    const xml = new DOMParser().parseFromString(xmlStr, 'text/xml');
+    return Array.from(xml.querySelectorAll('item')).map((item, idx) => {
+      // Extraer número y temporada del título si los hay
+      const rawTitle = item.querySelector('title')?.textContent || '';
+
+      // Imagen: WordPress suele ponerla en media:content o enclosure
+      const media = item.getElementsByTagNameNS('http://search.yahoo.com/mrss/', 'content')[0];
+      const enclosure = item.querySelector('enclosure');
+      let image = media?.getAttribute('url') || '';
+      // Si no hay media, intentar con la primera imagen dentro de content:encoded
+      if (!image) {
+        const encoded = item.getElementsByTagNameNS('http://purl.org/rss/1.0/modules/content/', 'encoded')[0]?.textContent || '';
+        const match = encoded.match(/<img[^>]+src=["']([^"']+)["']/i);
+        if (match) image = match[1];
+      }
+      // enclosure de audio no nos sirve como imagen, ignorarlo si es audio
+      const encUrl = enclosure?.getAttribute('url') || '';
+      const encType = enclosure?.getAttribute('type') || '';
+      if (!image && encUrl && !encType.includes('audio')) image = encUrl;
+
+      // link
+      const linkEl = item.querySelector('link');
+      let link = linkEl?.textContent?.trim() || '';
+      if (!link && linkEl?.nextSibling?.nodeValue) link = linkEl.nextSibling.nodeValue.trim();
+
+      // duration itunes
+      const ns = 'http://www.itunes.com/dtds/podcast-1.0.dtd';
+      const duration = item.getElementsByTagNameNS(ns, 'duration')[0]?.textContent || '';
+      // episode number
+      const epNum = item.getElementsByTagNameNS(ns, 'episode')[0]?.textContent || String(idx + 1);
+      // season
+      const season = item.getElementsByTagNameNS(ns, 'season')[0]?.textContent || '';
+      // itunes image
+      if (!image) {
+        image = item.getElementsByTagNameNS(ns, 'image')[0]?.getAttribute('href') || '';
+      }
+
+      return {
+        title: rawTitle,
+        link,
+        pubDate: item.querySelector('pubDate')?.textContent || '',
+        description: item.querySelector('description')?.textContent || '',
+        image,
+        duration,
+        epNum,
+        season,
+      };
+    });
+  }
+
+  function renderEpisodes() {
+    const list = document.getElementById('episodes-list');
+    const batch = allEpisodes.slice(shown, shown + PAGE_SIZE);
+
+    batch.forEach((ep, i) => {
+      const card = document.createElement('div');
+      card.className = 'episode-card';
+      card.style.animationDelay = (i * 0.06) + 's';
+
+      const date  = formatDate(ep.pubDate);
+      const desc  = stripHTML(ep.description).slice(0, 200);
+      const dur   = ep.duration ? `<span class="ep-dur">⏱ ${ep.duration}</span>` : '';
+      const seas  = ep.season ? `<span class="ep-season">T${ep.season}</span>` : '';
+
+      const thumbSrc = ep.image ? IMG_PROXY(ep.image) : '';
+      const img = thumbSrc
+        ? `<div class="ep-thumb-wrap">
+             <img class="ep-thumb" src="${thumbSrc}" alt="" loading="lazy"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+             <div class="ep-thumb-fallback" style="display:none;">◈</div>
+           </div>`
+        : `<div class="ep-thumb-wrap"><div class="ep-thumb-fallback" style="display:flex;">◈</div></div>`;
+
+      card.innerHTML = `
+        <div class="ep-inner">
+          ${img}
+          <div class="ep-body">
+            <div class="ep-meta">
+              <span class="ep-number">#${String(allEpisodes.indexOf(ep)+1).padStart(3,'0')}</span>
+              ${seas}
+              <span class="ep-date">${date}</span>
+              ${dur}
+            </div>
+            <div class="ep-title">${ep.title}</div>
+            ${desc ? `<div class="ep-desc">${desc}…</div>` : ''}
+            <div class="ep-actions">
+              <a class="btn-listen" href="${ep.link}" target="_blank" rel="noopener">
+                ▶ ESCUCHAR EPISODIO
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+      list.appendChild(card);
+    });
+
+    shown += batch.length;
+    const btn = document.getElementById('load-more');
+    btn.style.display = shown >= allEpisodes.length ? 'none' : 'inline-block';
+    btn.disabled = false;
+  }
+
+  async function loadFeed() {
+    try {
+      const res  = await fetch(PROXY_URL);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      if (!data.contents) throw new Error('Respuesta vacía');
+
+      allEpisodes = parseRSS(data.contents);
+      if (allEpisodes.length === 0) throw new Error('Sin episodios');
+
+      document.getElementById('loading').style.display = 'none';
+      renderEpisodes();
+    } catch(e) {
+      console.error('Error feed:', e);
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('error-msg').style.display = 'block';
+    }
+  }
+
+  document.getElementById('load-more').addEventListener('click', function() {
+    this.disabled = true;
+    renderEpisodes();
+  });
+
+  loadFeed();
+})();
+</script>
+
+</body>
+</html>
